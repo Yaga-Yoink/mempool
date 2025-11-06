@@ -11,7 +11,7 @@
 
 // N := number of BLOCK_SIZE byte blocks
 // requires BLOCK_SIZE is a power of 2
-template <std::size_t N, uint16_t BLOCK_SIZE = 4>
+template <std::size_t N, uint32_t BLOCK_SIZE = 4>
 class MEMPOOL {
   public:
     constexpr MEMPOOL() : head{0}, num_free_block{N}, num_initialized{0} {}; 
