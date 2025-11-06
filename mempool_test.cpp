@@ -10,6 +10,14 @@ int main() {
   pool.ffree(block3);
   void* block3_again = pool.falloc();
   void* block1_again = pool.falloc();
+  // try {
+  //   pool.falloc();
+  //   pool.falloc();
+  //   std::cout << "here" << '\n';
+  // }
+  // catch (std::bad_alloc e) {
+  //   printf("Alloc failed \n");
+  // }
 
 
   

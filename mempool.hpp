@@ -46,12 +46,12 @@ class MEMPOOL {
       uint32_t curr = idx >> (BLOCK_SIZE >> 1);
       std::memcpy(&pool[idx], &head, sizeof(decltype(head)));
       head = curr;
-      num_free_block--;
+      num_free_block++;
     }
 
 
   private:
-    char pool[N*BLOCK_SIZE];
+    char pool[N << (BLOCK_SIZE >> 1)];
     uint32_t head;
     uint32_t num_free_block;
     uint32_t num_initialized;
