@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <exception>
 #include <cstdio>
+#include <cstring>
+#include <iostream>
 
 // mem pool specification from http://www.thinkmind.org/download.php?articleid=computation_tools_2012_1_10_80006
 
@@ -29,39 +31,30 @@ class MEMPOOL {
         num_initialized++;
         return pool + ((head-1) << (BLOCK_SIZE >> 1));
       }
-      uint16_t curr = head;
-      head = pool[curr] + (pool[curr+1] << 8) + (pool[curr+2] << 16) + (pool[curr+3] << 24);
-      // head = pool[curr]; // TODO: fix this. since pool is a byte array, accessing 4 byte integers nees to be fixed
+      uint32_t idx = (head << (BLOCK_SIZE >> 1));
+      std::memcpy(&head, &pool[idx], sizeof(decltype(head)));
       num_free_block--;
       num_initialized++;
-      return static_cast<void*>(pool + curr*BLOCK_SIZE);
+      return static_cast<void*>(pool + idx);
     }
 
     /**
      * fujii frees the allocation at 'address'
      */
     void ffree(void* ptr) {
-      uint16_t idx = (static_cast<char*>(ptr) - pool);
-      uint16_t curr = idx >> (BLOCK_SIZE >> 1);
-      // std::uintptr_t uint_ptr = reinterpret_cast<std::uintptr_t>(static_cast<char*>(ptr)-pool);
-      // printf("uintr_ptr: %l\n", idx);
-      // printf("pool address: %p\n", pool);
-      // printf("new head: %i\n", curr);
-      pool[idx] = head & 0xFF;
-      pool[idx+1] = head & 0xFF00;
-      pool[idx+2] = head & 0xFF0000;
-      pool[idx+3] = head & 0xFF000000;
+      uint32_t idx = (static_cast<char*>(ptr) - pool);
+      uint32_t curr = idx >> (BLOCK_SIZE >> 1);
+      std::memcpy(&pool[idx], &head, sizeof(decltype(head)));
       head = curr;
-      // printf("new head: %i\n", head);
       num_free_block--;
     }
 
 
   private:
     char pool[N*BLOCK_SIZE];
-    uint16_t head;
-    uint16_t num_free_block;
-    uint16_t num_initialized;
+    uint32_t head;
+    uint32_t num_free_block;
+    uint32_t num_initialized;
 };
 
 #endif
