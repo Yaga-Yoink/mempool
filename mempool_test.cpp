@@ -5,17 +5,20 @@
 void compare_perf() {
   constexpr int N = 1048576;
   constexpr uint32_t BLOCK_SIZE = 4; 
-  MEMPOOL<N, BLOCK_SIZE> pool{};
 
   auto start_pool = std::chrono::system_clock::now();
-  for (int i = 0; i < N; i++) {
-    pool.falloc();
+  {
+    MEMPOOL<N, BLOCK_SIZE> pool{};
+    for (int i = 0; i < N; i++) {
+      pool.falloc();
+    }
   }
   auto end_pool = std::chrono::system_clock::now();
 
   auto start_malloc = std::chrono::system_clock::now(); 
   for (int i = 0; i < N; i++) {
-    malloc(BLOCK_SIZE);
+    void* block = malloc(BLOCK_SIZE);
+    free(block);
   }
   auto end_malloc = std::chrono::system_clock::now(); 
   std::cout << "Mempool took " << end_pool - start_pool << '\n';

@@ -49,7 +49,6 @@ class MEMPOOL {
       num_free_block++;
     }
 
-
   private:
     char pool[N << (BLOCK_SIZE >> 1)];
     uint32_t head;
