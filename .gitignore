@@ -1,1 +1,6 @@
-.vscode/
+*
+!.gitignore
+!mempool.hpp
+!mempool_test.cpp
+!Makefile
+!README.md
